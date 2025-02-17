@@ -5,6 +5,8 @@ import Snackbar from 'react-native-snackbar'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { authStackparamList } from '../stack/Auth'
 import { color } from '../style/colors'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../features/auth/authSlice'
 
 type loginProps = NativeStackScreenProps<authStackparamList, 'Login'>
 
@@ -12,7 +14,7 @@ const validateInputFields = (username: string, password: string) => {
 
 
     if (!username) {
-        return { validation: false, isEmail: false, errorMessage: "Email or username can't be empty" }
+        return { validation: false, isEmail: false, errorMessage: "Username can't be empty" }
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,9 +44,10 @@ const Login = ({ navigation }: loginProps | any) => {
     const [validationError, setValidationError] = useState<boolean>(false)
     const [loader, setLoader] = useState<boolean>(false)
 
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
     const showSnackBar = (message: string, textColor = "#FFFFFF") => {
+        setLoader(false)
         return Snackbar.show(
             {
                 text: message,
@@ -52,11 +55,11 @@ const Login = ({ navigation }: loginProps | any) => {
                 textColor,
                 action: {
                     text: "OK",
-                    textColor: "black",
+                    textColor,
                     onPress: () => {
                         Snackbar.dismiss()
                         setValidationError(false)
-                        setLoader(false)
+                        // setLoader(false)
                     }
                 }
             }
@@ -77,6 +80,9 @@ const Login = ({ navigation }: loginProps | any) => {
             showSnackBar("Sorry Email service is not available please consider using username !")
             return
         }
+
+        dispatch(login("token"))
+        // console.log(useSelector(state => state.auth.token))
 
         // try {
 
@@ -100,14 +106,14 @@ const Login = ({ navigation }: loginProps | any) => {
     return (
         <>
             <View style={[styles.mainContainer]}>
-                <Text style={[styles.textColor, styles.signInText]}>Sign in</Text>
+                <Text style={[styles.textColor, styles.signInText]}>Login</Text>
                 <View style={styles.outerFormContainer}>
                     <Text style={[styles.textColor, styles.welcomeText]}>
                         Welcome Back
                     </Text>
                     <View style={styles.formContainer}>
                         <TextInput
-                            placeholder='username or email'
+                            placeholder='Username'
                             underlineColor='transparent'
                             activeUnderlineColor='transparent'
                             style={styles.textInput}
@@ -154,7 +160,8 @@ const Login = ({ navigation }: loginProps | any) => {
                                 navigation.navigate("Signup")
                             }}
                         >
-                            <Text style={[styles.textColor, styles.newUserSignUpBtnText]}>New user? Sign up</Text>
+                            <Text style={[styles.textColor, styles.newUserSignUpBtnText]}>New user?</Text>
+                            <Text style={[styles.textColor, styles.newUserSignUpBtnText, styles.toSignupPageBtn]}>Sign up</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -224,6 +231,8 @@ const styles = StyleSheet.create({
     newUserSignUpBtn: {
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
+        gap: 8
     },
     newUserSignUpBtnText: {
         fontWeight: 'bold',
@@ -232,6 +241,9 @@ const styles = StyleSheet.create({
     forgotBtnText: {
         fontWeight: '500',
         fontSize: 14
+    },
+    toSignupPageBtn: {
+        color: color.primaryColor
     }
 
 })

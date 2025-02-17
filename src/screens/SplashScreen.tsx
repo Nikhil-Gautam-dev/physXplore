@@ -1,6 +1,7 @@
-import {StyleSheet, View, Image} from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import React from 'react';
-import logo from '../assests/logos/purple_tilted_s.png';
+import logo from '../assests/logos/bulb_bittersweet_transparent.png';
+import { color } from '../style/colors';
 
 const SplashScreen = () => {
   return (
@@ -15,12 +16,12 @@ export default SplashScreen;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: color.primaryColor,
     alignItems: 'center',
     justifyContent: 'center',
   },
   imgContainer: {
-    height: 400,
-    width: 200,
+    height: 210,
+    width: 270,
   },
 });
